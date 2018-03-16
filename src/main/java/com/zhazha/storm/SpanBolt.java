@@ -15,7 +15,7 @@ public class SpanBolt extends BaseRichBolt {
     private List<Tuple> endTuples = new LinkedList<Tuple>();
 
     public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
-        this.collector = collector;
+        this.collector = outputCollector;
     }
 
     public void execute(Tuple tuple) {
@@ -33,25 +33,25 @@ public class SpanBolt extends BaseRichBolt {
 
         }
 
-
     }
 
     private void calcSpan(){
         if(endTuples.size()!=0){
             Tuple tuple = endTuples.get(0);
-            int traceId = (Integer) tuple.getValue(0);
-            int spanId = (Integer) tuple.getValue(1);
-            int id = (Integer) tuple.getValue(2);
-            int parentId = (Integer) tuple.getValue(3);
-            int state = (Integer) tuple.getValue(4);
+//            Long traceId = (Long) tuple.getValue(0);
+//            Long spanId = (Long) tuple.getValue(1);
+//            Long id = (Long) tuple.getValue(2);
+//            Long parentId = (Long) tuple.getValue(3);
+//            int state = (Integer) tuple.getValue(4);
             String service = (String) tuple.getValue(5);
             String hostIp = (String) tuple.getValue(6);
             Long timeStamp = (Long) tuple.getValue(7);
-            int StrartId = (Integer) StartTuple.getValue(2);
+//            long StrartId = (Long) StartTuple.getValue(2);
+
             String StartService = (String) StartTuple.getValue(5);
             String StrartHostIp = (String) StartTuple.getValue(6);
             Long StartTimeStamp = (Long) StartTuple.getValue(7);
-            Long during =StartTimeStamp -timeStamp;
+            Long during =timeStamp - StartTimeStamp;
             System.out.println(" StartService:"+StartService+" EndService:"+service+" StrartHostIp:"+StrartHostIp+" EndHostIp:"+hostIp+" during:"+ during);
             endTuples.remove(0);
             calcSpan();
