@@ -52,9 +52,8 @@ public class SplitBolt extends BaseRichBolt {
     }
 
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-        outputFieldsDeclarer.declare(new Fields("traceId", "spanId", "id", "parentId", "state", "service", "hostIp", "timeStamp"));
-//        100001,100001,,0,login,10.113.154.71,1510727017138
-//        100001,100002,100001,1,logic,10.113.154.83,1510727017144
+        outputFieldsDeclarer.declare(new Fields("traceId","id","parentId","state","service","hostIp","errorCode","errorStack","timeStamp"));
+
     }
 
 }

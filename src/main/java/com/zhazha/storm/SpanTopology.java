@@ -6,10 +6,11 @@ import org.apache.storm.kafka.*;
 import org.apache.storm.spout.SchemeAsMultiScheme;
 import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.tuple.Fields;
+
 import java.util.Arrays;
 
 public class SpanTopology {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         // 配置spout的kafka信息
         //zookeeper
         String zks = "localhost:2181";
@@ -30,16 +31,15 @@ public class SpanTopology {
         // 配置spout的输出类型
         spoutConf.scheme = new SchemeAsMultiScheme(new StringScheme());
 
-
         // 创建拓扑
         TopologyBuilder builder = new TopologyBuilder();
         builder.setSpout("kafka-spout", new KafkaSpout(spoutConf));
         builder.setBolt("vBolt", new SplitBolt()).shuffleGrouping("kafka-spout");
-        builder.setBolt("message-bolt", new SpanBolt()).fieldsGrouping("vBolt",new Fields("traceId","spanId"));
+        builder.setBolt("message-bolt", new SpanBolt(),2).fieldsGrouping("vBolt",new Fields("traceId","id"));
 
         Config config = new Config();
         // 设置并行度
-//        config.setNumWorkers(4);
+        config.setNumWorkers(2);
 
         // 设置kafkaBolt的输出topic
         config.put("topic", "log");
